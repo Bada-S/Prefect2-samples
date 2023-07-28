@@ -1,0 +1,47 @@
+# Welcome to your prefect.yaml file! You can you this file for storing and managing
+# configuration for deploying your flows. We recommend committing this file to source
+# control along with your flow code.
+
+# Generic metadata about this project
+name: env-test
+prefect-version: 2.11.0
+
+# build section allows you to manage and build docker images
+build:
+  - prefect.deployments.steps.run_shell_script:
+      id: set-docker-buildkit
+      script: echo $DOCKER_BUILDKIT
+      env: { DOCKER_BUILDKIT: "1" }
+  - prefect_docker.deployments.steps.build_docker_image:
+      id: build_image
+      requires: prefect-docker>=0.3.0
+      image_name: jsopkin/tset-deployment
+      tag: latest
+      dockerfile: Dockerfile
+      push: true
+
+# push section allows you to manage if and how this project is uploaded to remote locations
+push: null
+
+# pull section allows you to provide instructions for cloning this project in remote locations
+pull:
+  - prefect.deployments.steps.git_clone:
+      repository: https://github.com/Bada-S/Prefect2-samples/docker-env.git
+      branch: main
+      access_token: null
+
+# the deployments section allows you to provide configuration for deploying flows
+deployments:
+  - name: null
+    version: null
+    tags: []
+    description: null
+    schedule: {}
+    flow_name: null
+    entrypoint: null
+    parameters: {}
+    work_pool:
+      name: null
+      work_queue_name: null
+      job_variables:
+        image: "{{ build_image.image }}"
