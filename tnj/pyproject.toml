@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "tnj"
+version = "0.1.0"
+description = ""
+authors = ["James Bada Sopkin <69161193+Bada-S@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+prefect = "^2.14.10"
+prefect-gcp = "^0.5.5"
+requests = "^2.31.0"
+
+[tool.poetry.group.dev.dependencies]
+ipython = "^8.18.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,31 @@
+name: Build an Image and Deploy a Prefect flow
+on:
+  push:
+    branches:
+      - test
+jobs:
+  deploy_flow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - uses: "google-github-actions/auth@v2"
+        with:
+          project_id: "prefect-sbx-sales-engineering"
+          service_account: "james-test-account@prefect-sbx-sales-engineering.iam.gserviceaccount.com"
+
+      - name: Prefect Auth
+        uses: PrefectHQ/actions-prefect-auth@v1
+        with:
+          prefect-api-key: ${{ secrets.PREFECT_API_KEY }}
+          prefect-workspace: ${{ secrets.PREFECT_WORKSPACE }}
+
+      - name: Run Prefect Deploy
+        uses: PrefectHQ/actions-prefect-deploy@v3
+        with:
+          deployment-names: Docker
+          requirements-file-paths: ./examples/docker/requirements.txt
